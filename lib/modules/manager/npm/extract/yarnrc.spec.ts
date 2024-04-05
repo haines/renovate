@@ -57,6 +57,24 @@ describe('modules/manager/npm/extract/yarnrc', () => {
       });
       expect(registryUrl).toBeNull();
     });
+
+    it('ignores localhost default registry', () => {
+      const registryUrl = resolveRegistryUrl('a-package', {
+        npmRegistryServer: 'http://localhost:1234',
+      });
+      expect(registryUrl).toBeNull();
+    });
+
+    it('ignores localhost scoped registry', () => {
+      const registryUrl = resolveRegistryUrl('@scope/a-package', {
+        npmScopes: {
+          scope: {
+            npmRegistryServer: 'http://localhost:1234',
+          },
+        },
+      });
+      expect(registryUrl).toBeNull();
+    });
   });
 
   describe('loadConfigFromYarnrcYml()', () => {

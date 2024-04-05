@@ -60,12 +60,18 @@ export function resolveRegistryUrl(
   if (yarnConfig.npmScopes) {
     for (const scope in yarnConfig.npmScopes) {
       if (packageName.startsWith(`@${scope}/`)) {
-        return yarnConfig.npmScopes[scope].npmRegistryServer ?? null;
+        return ignoreLocalhost(yarnConfig.npmScopes[scope].npmRegistryServer);
       }
     }
   }
-  if (yarnConfig.npmRegistryServer) {
-    return yarnConfig.npmRegistryServer;
+
+  return ignoreLocalhost(yarnConfig.npmRegistryServer);
+}
+
+function ignoreLocalhost(url: string | undefined): string | null {
+  if (!url || url.includes('localhost')) {
+    return null;
   }
-  return null;
+
+  return url;
 }
